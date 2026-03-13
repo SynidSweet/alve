@@ -5,7 +5,7 @@ const path = require('path');
 const fs = require('fs');
 
 const app = express();
-const PORT = process.env.PORT || 3001;
+const PORT = process.env.PORT || 3010;
 const CORS_ORIGIN = process.env.CORS_ORIGIN || 'https://alve.petter.ai';
 
 // --- CORS ---
@@ -14,7 +14,8 @@ app.use(cors({
   origin: (origin, callback) => {
     if (!origin) return callback(null, true);
     if (origin === CORS_ORIGIN) return callback(null, true);
-    if (/^http:\/\/localhost(:\d+)?$/.test(origin)) return callback(null, true);
+    if (/^https?:\/\/localhost(:\d+)?$/.test(origin)) return callback(null, true);
+    if (/\.vercel\.app$/.test(origin)) return callback(null, true);
     callback(new Error('Not allowed by CORS'));
   }
 }));
