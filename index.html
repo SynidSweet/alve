@@ -1,0 +1,1674 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>~*~ALVE'S WORLD~*~ - Welcome to my homepage!!!</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+<style>
+/* ============================================
+   ALVE'S WORLD - The Most 90s Page Ever Made
+   Best viewed in Netscape Navigator 4.0
+   ============================================ */
+
+*, *::before, *::after {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+:root {
+  --bg-space: #0a0a2e;
+  --mc-green: #5BAA3C;
+  --creeper-green: #4CAF50;
+  --creeper-dark: #3d8b40;
+  --creeper-light: #6abf6e;
+  --gold: #FFD700;
+  --hot-pink: #FF69B4;
+  --cyan: #00FFFF;
+  --lime: #00FF00;
+  --magenta: #FF00FF;
+  --red: #FF0000;
+  --orange: #FF6600;
+  --white: #FFFFFF;
+  --dirt-brown: #8B6914;
+  --stone-gray: #7F7F7F;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background: var(--bg-space);
+  color: var(--white);
+  font-family: 'Press Start 2P', monospace;
+  overflow-x: hidden;
+  min-height: 100vh;
+  position: relative;
+  cursor: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='32' height='32'><text y='24' font-size='24'>⛏️</text></svg>") 4 4, auto;
+  line-height: 1.6;
+}
+
+/* ---- STARFIELD BACKGROUND ---- */
+#starfield {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 0;
+  pointer-events: none;
+}
+
+/* ---- CURSOR TRAIL ---- */
+.sparkle {
+  position: fixed;
+  pointer-events: none;
+  z-index: 99999;
+  font-size: 16px;
+  animation: sparkle-fade 0.8s ease-out forwards;
+}
+
+@keyframes sparkle-fade {
+  0% { opacity: 1; transform: scale(1) rotate(0deg); }
+  100% { opacity: 0; transform: scale(0) rotate(180deg) translateY(-30px); }
+}
+
+/* ---- MAIN CONTENT ---- */
+.main-content {
+  position: relative;
+  z-index: 1;
+  max-width: 850px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+/* ---- RAINBOW TEXT ANIMATION ---- */
+@keyframes rainbow {
+  0%   { color: #FF0000; }
+  14%  { color: #FF6600; }
+  28%  { color: #FFD700; }
+  42%  { color: #00FF00; }
+  57%  { color: #00FFFF; }
+  71%  { color: #0066FF; }
+  85%  { color: #FF00FF; }
+  100% { color: #FF0000; }
+}
+
+@keyframes rainbow-bg {
+  0%   { background-position: 0% 50%; }
+  100% { background-position: 200% 50%; }
+}
+
+.rainbow-text {
+  background: linear-gradient(90deg, #FF0000, #FF6600, #FFD700, #00FF00, #00FFFF, #0066FF, #FF00FF, #FF0000);
+  background-size: 200% auto;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: rainbow-bg 3s linear infinite;
+}
+
+/* ---- BOUNCING HEADER ---- */
+@keyframes bounce-wobble {
+  0%, 100% { transform: translateY(0) rotate(-1deg) scale(1); }
+  15% { transform: translateY(-18px) rotate(1deg) scale(1.03); }
+  30% { transform: translateY(0) rotate(-0.5deg) scale(1); }
+  45% { transform: translateY(-10px) rotate(0.5deg) scale(1.02); }
+  60% { transform: translateY(0) rotate(0deg) scale(1); }
+  75% { transform: translateY(-5px) rotate(-0.3deg) scale(1.01); }
+}
+
+.header-section {
+  text-align: center;
+  padding: 40px 10px 20px;
+  position: relative;
+}
+
+.header-title {
+  font-size: clamp(14px, 4vw, 28px);
+  animation: bounce-wobble 2s ease-in-out infinite;
+  display: inline-block;
+  text-shadow:
+    3px 3px 0 #000,
+    -1px -1px 0 #000,
+    1px -1px 0 #000,
+    -1px 1px 0 #000;
+  padding: 20px 10px;
+  position: relative;
+}
+
+.header-subtitle {
+  font-size: clamp(8px, 2vw, 12px);
+  color: var(--cyan);
+  margin-top: 10px;
+  animation: blink-soft 1.5s ease-in-out infinite;
+}
+
+@keyframes blink-soft {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.3; }
+}
+
+/* ---- FLAME DIVIDERS (CSS ONLY) ---- */
+.fire-divider {
+  display: flex;
+  justify-content: center;
+  gap: 2px;
+  padding: 15px 0;
+  overflow: hidden;
+}
+
+.flame {
+  width: 18px;
+  height: 30px;
+  position: relative;
+}
+
+.flame::before, .flame::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%;
+}
+
+.flame::before {
+  left: 3px;
+  width: 12px;
+  height: 24px;
+  background: linear-gradient(to top, #FF0000, #FF6600, #FFD700);
+  animation: flicker 0.3s ease-in-out infinite alternate;
+}
+
+.flame::after {
+  left: 5px;
+  width: 8px;
+  height: 16px;
+  background: linear-gradient(to top, #FF6600, #FFFF00, #FFFFFF);
+  animation: flicker 0.2s ease-in-out infinite alternate-reverse;
+}
+
+@keyframes flicker {
+  0% { transform: scaleY(1) scaleX(1) translateY(0); }
+  25% { transform: scaleY(1.15) scaleX(0.9) translateY(-2px); }
+  50% { transform: scaleY(0.9) scaleX(1.1) translateY(1px); }
+  75% { transform: scaleY(1.1) scaleX(0.95) translateY(-1px); }
+  100% { transform: scaleY(0.95) scaleX(1.05) translateY(0); }
+}
+
+/* stagger the flames */
+.flame:nth-child(odd)::before { animation-delay: -0.1s; }
+.flame:nth-child(3n)::before { animation-delay: -0.2s; }
+.flame:nth-child(4n)::after { animation-delay: -0.15s; }
+
+/* ---- TORCH CSS PIXEL ART ---- */
+.torches-container {
+  display: flex;
+  justify-content: center;
+  align-items: flex-end;
+  gap: clamp(40px, 15vw, 200px);
+  margin-bottom: -10px;
+}
+
+.torch {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.torch-flame-wrap {
+  width: 14px;
+  height: 20px;
+  position: relative;
+}
+
+.torch-flame-wrap::before {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 1px;
+  width: 12px;
+  height: 18px;
+  background: radial-gradient(ellipse at bottom, #FFFF00, #FF6600, #FF0000);
+  border-radius: 50% 50% 40% 40% / 70% 70% 30% 30%;
+  animation: flicker 0.25s ease-in-out infinite alternate;
+  box-shadow: 0 0 8px #FF6600, 0 0 16px #FF660044;
+}
+
+.torch-stick {
+  width: 6px;
+  height: 28px;
+  background: linear-gradient(to bottom, #8B6914, #6B4F12);
+  border: 1px solid #5a3e0a;
+}
+
+/* ---- PIXEL ART SECTION ---- */
+.pixel-section {
+  text-align: center;
+  padding: 20px 0;
+}
+
+.pixel-art-row {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 30px;
+  flex-wrap: wrap;
+}
+
+/* CSS CREEPER FACE */
+.creeper-face {
+  display: grid;
+  grid-template-columns: repeat(8, 1fr);
+  grid-template-rows: repeat(8, 1fr);
+  width: 128px;
+  height: 128px;
+  image-rendering: pixelated;
+  flex-shrink: 0;
+  position: relative;
+}
+
+.creeper-face .px {
+  width: 100%;
+  height: 100%;
+}
+
+.px-l { background: var(--creeper-light); }
+.px-g { background: var(--creeper-green); }
+.px-d { background: var(--creeper-dark); }
+.px-b { background: #1a1a1a; }
+
+/* creeper blink */
+.creeper-face.blink .eye-px {
+  animation: creeper-blink 4s ease-in-out infinite;
+}
+
+@keyframes creeper-blink {
+  0%, 90%, 100% { transform: scaleY(1); }
+  95% { transform: scaleY(0.1); }
+}
+
+/* CSS DIAMOND SWORD */
+.diamond-sword {
+  display: grid;
+  grid-template-columns: repeat(16, 6px);
+  grid-template-rows: repeat(16, 6px);
+  flex-shrink: 0;
+  transform: rotate(-45deg);
+  animation: sword-shine 3s ease-in-out infinite;
+}
+
+@keyframes sword-shine {
+  0%, 100% { filter: brightness(1); }
+  50% { filter: brightness(1.3) drop-shadow(0 0 6px #4DE8F0); }
+}
+
+.sw-t { background: transparent; }
+.sw-d { background: #4DE8F0; } /* diamond cyan */
+.sw-dl { background: #7DF1F8; } /* diamond light */
+.sw-dd { background: #2DB8C0; } /* diamond dark */
+.sw-b { background: #8B6914; } /* brown handle */
+.sw-bl { background: #A88032; } /* brown light */
+.sw-g { background: #555555; } /* gray guard */
+.sw-gl { background: #777777; } /* gray light */
+
+/* ---- UNDER CONSTRUCTION BANNER ---- */
+.under-construction {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  margin: 20px auto;
+  padding: 12px 20px;
+  background: repeating-linear-gradient(
+    45deg,
+    #000000,
+    #000000 10px,
+    #FFD700 10px,
+    #FFD700 20px
+  );
+  border: 3px solid var(--gold);
+  max-width: 500px;
+  animation: construction-flash 1s step-start infinite;
+}
+
+@keyframes construction-flash {
+  0%, 100% { border-color: var(--gold); }
+  50% { border-color: var(--red); }
+}
+
+.under-construction span {
+  background: #000;
+  padding: 6px 12px;
+  font-size: 10px;
+  color: var(--gold);
+  white-space: nowrap;
+}
+
+.construction-icon {
+  font-size: 24px;
+  animation: spin-slow 2s linear infinite;
+}
+
+@keyframes spin-slow {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+/* ---- NEW BADGE ---- */
+.new-badge {
+  display: inline-block;
+  background: var(--red);
+  color: var(--white);
+  font-size: 8px;
+  padding: 3px 6px;
+  border-radius: 3px;
+  animation: new-pulse 0.5s ease-in-out infinite alternate;
+  vertical-align: super;
+  margin-left: 5px;
+  text-shadow: none;
+  -webkit-text-fill-color: white;
+}
+
+@keyframes new-pulse {
+  0% { transform: scale(1); background: var(--red); }
+  100% { transform: scale(1.2); background: #FF4444; }
+}
+
+/* ---- ABOUT ZONE ---- */
+.about-section {
+  background: linear-gradient(135deg, #1a0a3e 0%, #0d1a3e 100%);
+  border: 3px ridge var(--hot-pink);
+  padding: 25px;
+  margin: 20px 0;
+  position: relative;
+}
+
+.about-section h2 {
+  font-size: clamp(10px, 2.5vw, 16px);
+  color: var(--hot-pink);
+  margin-bottom: 15px;
+  text-align: center;
+}
+
+.about-text {
+  font-family: 'Comic Sans MS', 'Comic Sans', cursive;
+  font-size: clamp(14px, 2.5vw, 18px);
+  line-height: 1.8;
+  color: #EEEEFF;
+  text-align: center;
+}
+
+.blink-text {
+  animation: blink-hard 1s step-end infinite;
+}
+
+@keyframes blink-hard {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0; }
+}
+
+/* ---- VISITOR COUNTER ---- */
+.counter-section {
+  text-align: center;
+  padding: 25px 0;
+}
+
+.counter-section h2 {
+  font-size: clamp(10px, 2.5vw, 14px);
+  color: var(--lime);
+  margin-bottom: 15px;
+}
+
+.counter-display {
+  display: inline-flex;
+  gap: 4px;
+  background: #111;
+  padding: 12px 16px;
+  border: 3px inset #444;
+  border-radius: 4px;
+  box-shadow: inset 0 0 20px rgba(0,0,0,0.8), 0 0 10px rgba(0,255,0,0.2);
+}
+
+.counter-digit {
+  width: 32px;
+  height: 48px;
+  background: #0a0a0a;
+  border: 1px solid #333;
+  border-radius: 3px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 24px;
+  font-family: 'Press Start 2P', monospace;
+  color: var(--lime);
+  text-shadow: 0 0 8px var(--lime), 0 0 16px rgba(0,255,0,0.3);
+  position: relative;
+  overflow: hidden;
+}
+
+.counter-digit::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: rgba(0,0,0,0.5);
+}
+
+.counter-digit.rolling {
+  animation: digit-roll 0.6s ease-out;
+}
+
+@keyframes digit-roll {
+  0% { transform: translateY(-100%); opacity: 0; }
+  60% { transform: translateY(10%); opacity: 1; }
+  100% { transform: translateY(0); }
+}
+
+.counter-label {
+  font-size: 10px;
+  color: #888;
+  margin-top: 10px;
+}
+
+/* ---- GUESTBOOK ---- */
+.guestbook-section {
+  background: #0d0d2a;
+  border: 3px double var(--gold);
+  padding: 25px;
+  margin: 20px 0;
+}
+
+.guestbook-section h2 {
+  font-size: clamp(10px, 2.5vw, 16px);
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.guestbook-form {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-bottom: 25px;
+}
+
+.guestbook-form input,
+.guestbook-form textarea {
+  background: #1a1a1a;
+  border: 3px inset var(--stone-gray);
+  color: var(--white);
+  font-family: 'Press Start 2P', monospace;
+  font-size: 10px;
+  padding: 10px;
+  outline: none;
+  width: 100%;
+}
+
+.guestbook-form input:focus,
+.guestbook-form textarea:focus {
+  border-color: var(--mc-green);
+  box-shadow: 0 0 8px rgba(91, 170, 60, 0.4);
+}
+
+.guestbook-form textarea {
+  height: 80px;
+  resize: vertical;
+}
+
+.guestbook-form input::placeholder,
+.guestbook-form textarea::placeholder {
+  color: #555;
+}
+
+.mc-button {
+  background: linear-gradient(to bottom, #6B6B6B 0%, #5B5B5B 45%, #4B4B4B 46%, #3B3B3B 100%);
+  border: 3px outset #888;
+  color: var(--white);
+  font-family: 'Press Start 2P', monospace;
+  font-size: 11px;
+  padding: 10px 20px;
+  cursor: pointer;
+  text-shadow: 2px 2px 0 #222;
+  transition: all 0.1s;
+  position: relative;
+}
+
+.mc-button:hover {
+  background: linear-gradient(to bottom, #7B7B7B 0%, #6B6B6B 45%, #5B5B5B 46%, #4B4B4B 100%);
+  color: var(--gold);
+}
+
+.mc-button:active {
+  border-style: inset;
+  transform: translateY(2px);
+}
+
+.guestbook-entries {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  max-height: 350px;
+  overflow-y: auto;
+  padding: 10px;
+  background: #000;
+  border: 2px inset #333;
+}
+
+.guestbook-entries::-webkit-scrollbar {
+  width: 12px;
+}
+.guestbook-entries::-webkit-scrollbar-track {
+  background: #1a1a1a;
+}
+.guestbook-entries::-webkit-scrollbar-thumb {
+  background: #555;
+  border: 2px solid #333;
+}
+
+.gb-entry {
+  font-size: 10px;
+  line-height: 1.6;
+  padding: 4px 0;
+  border-bottom: 1px solid #1a1a1a;
+}
+
+.gb-entry .gb-name {
+  color: var(--mc-green);
+}
+
+.gb-entry .gb-msg {
+  color: #ddd;
+}
+
+.gb-entry .gb-date {
+  color: #666;
+  font-size: 8px;
+}
+
+.gb-status {
+  font-size: 10px;
+  margin-top: 8px;
+  min-height: 16px;
+}
+
+.gb-status.error { color: var(--red); }
+.gb-status.success { color: var(--mc-green); }
+
+/* ---- MUSIC BUTTON ---- */
+.music-button {
+  position: fixed;
+  top: 15px;
+  right: 15px;
+  z-index: 100;
+  background: linear-gradient(to bottom, #5B5B5B 0%, #4B4B4B 45%, #3B3B3B 46%, #2B2B2B 100%);
+  border: 3px outset #777;
+  color: var(--white);
+  font-family: 'Press Start 2P', monospace;
+  font-size: 9px;
+  padding: 8px 12px;
+  cursor: pointer;
+  text-shadow: 1px 1px 0 #000;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.music-button:hover {
+  border-color: var(--gold);
+  color: var(--gold);
+}
+
+.music-button .note {
+  font-size: 14px;
+  animation: note-bounce 0.6s ease-in-out infinite alternate;
+}
+
+.music-button.playing .note {
+  animation: note-bounce 0.3s ease-in-out infinite alternate;
+}
+
+@keyframes note-bounce {
+  from { transform: translateY(0) rotate(-5deg); }
+  to { transform: translateY(-3px) rotate(5deg); }
+}
+
+/* ---- MARQUEE SECTION ---- */
+.marquee-section {
+  padding: 15px 0;
+}
+
+.marquee-bar {
+  background: #000;
+  border: 2px inset #444;
+  padding: 10px 0;
+  overflow: hidden;
+}
+
+.marquee-content {
+  display: inline-block;
+  white-space: nowrap;
+  animation: scroll-left 25s linear infinite;
+  font-size: 11px;
+  color: var(--cyan);
+}
+
+@keyframes scroll-left {
+  0% { transform: translateX(100vw); }
+  100% { transform: translateX(-100%); }
+}
+
+.marquee-content span {
+  padding: 0 60px;
+}
+
+/* ---- BADGES ---- */
+.badges-row {
+  display: flex;
+  justify-content: center;
+  gap: 15px;
+  flex-wrap: wrap;
+  padding: 15px 0;
+}
+
+.badge-800x600 {
+  background: #333;
+  border: 2px outset #666;
+  padding: 8px 14px;
+  font-size: 7px;
+  color: #ccc;
+  text-align: center;
+  line-height: 1.8;
+}
+
+.badge-html {
+  background: linear-gradient(to bottom, #336, #224);
+  border: 2px outset #558;
+  padding: 8px 14px;
+  font-size: 7px;
+  color: var(--cyan);
+  text-align: center;
+  line-height: 1.8;
+}
+
+.badge-mc {
+  background: linear-gradient(to bottom, var(--creeper-dark), #2a6e2e);
+  border: 2px outset var(--mc-green);
+  padding: 8px 14px;
+  font-size: 7px;
+  color: var(--white);
+  text-align: center;
+  line-height: 1.8;
+}
+
+/* ---- FOOTER ---- */
+.footer {
+  text-align: center;
+  padding: 20px 0 40px;
+  font-size: 8px;
+  color: #555;
+  line-height: 2.4;
+}
+
+.footer a {
+  color: var(--cyan);
+  text-decoration: none;
+}
+
+/* ---- LINKS ---- */
+.cool-links {
+  text-align: center;
+  padding: 10px 0;
+}
+
+.cool-links h2 {
+  font-size: clamp(10px, 2.5vw, 14px);
+  color: var(--cyan);
+  margin-bottom: 15px;
+}
+
+.link-list {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  font-family: 'Comic Sans MS', 'Comic Sans', cursive;
+  font-size: 14px;
+}
+
+.link-list li::before {
+  content: '>> ';
+  color: var(--gold);
+}
+
+.link-list a {
+  color: var(--hot-pink);
+  text-decoration: underline wavy;
+}
+
+.link-list a:hover {
+  color: var(--cyan);
+  text-decoration: underline;
+}
+
+/* ---- KONAMI CHAOS MODE ---- */
+body.konami-chaos {
+  animation: bg-chaos 0.3s linear infinite;
+}
+
+body.konami-chaos * {
+  animation-duration: 0.2s !important;
+}
+
+body.konami-chaos .main-content {
+  animation: shake-chaos 0.1s linear infinite;
+}
+
+@keyframes bg-chaos {
+  0% { background: #FF0000; }
+  16% { background: #FF6600; }
+  33% { background: #FFFF00; }
+  50% { background: #00FF00; }
+  66% { background: #0000FF; }
+  83% { background: #FF00FF; }
+  100% { background: #FF0000; }
+}
+
+@keyframes shake-chaos {
+  0% { transform: translate(0, 0) rotate(0deg); }
+  25% { transform: translate(-5px, 5px) rotate(-1deg); }
+  50% { transform: translate(5px, -5px) rotate(1deg); }
+  75% { transform: translate(-3px, -3px) rotate(-0.5deg); }
+  100% { transform: translate(3px, 3px) rotate(0.5deg); }
+}
+
+.konami-overlay {
+  display: none;
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  z-index: 9999;
+  pointer-events: none;
+  background: repeating-linear-gradient(
+    0deg,
+    transparent,
+    transparent 2px,
+    rgba(0,0,0,0.15) 2px,
+    rgba(0,0,0,0.15) 4px
+  );
+}
+
+body.konami-chaos .konami-overlay {
+  display: block;
+}
+
+.konami-text {
+  display: none;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: clamp(20px, 6vw, 48px);
+  z-index: 10000;
+  pointer-events: none;
+  text-shadow:
+    4px 4px 0 #000,
+    -2px -2px 0 #000,
+    2px -2px 0 #000,
+    -2px 2px 0 #000;
+  animation: chaos-text-spin 0.5s linear infinite;
+}
+
+body.konami-chaos .konami-text {
+  display: block;
+}
+
+@keyframes chaos-text-spin {
+  0% { transform: translate(-50%, -50%) scale(1) rotate(0deg); }
+  25% { transform: translate(-50%, -50%) scale(1.5) rotate(90deg); }
+  50% { transform: translate(-50%, -50%) scale(0.8) rotate(180deg); }
+  75% { transform: translate(-50%, -50%) scale(1.3) rotate(270deg); }
+  100% { transform: translate(-50%, -50%) scale(1) rotate(360deg); }
+}
+
+/* ---- SECTION BORDERS ---- */
+.mc-border {
+  border-image: repeating-linear-gradient(
+    90deg,
+    var(--dirt-brown) 0px,
+    var(--dirt-brown) 8px,
+    #6B4F12 8px,
+    #6B4F12 16px
+  ) 8;
+  border-width: 4px;
+  border-style: solid;
+}
+
+/* ---- TILED DIRT TEXTURE for some sections ---- */
+.dirt-bg {
+  background:
+    repeating-conic-gradient(#3a2a0a 0% 25%, #2a1a00 0% 50%) 0 0 / 16px 16px;
+}
+
+/* ---- WEB RING (fake lol) ---- */
+.webring {
+  text-align: center;
+  padding: 15px;
+  font-size: 9px;
+  color: #888;
+}
+
+.webring a {
+  color: var(--hot-pink);
+  text-decoration: none;
+  padding: 0 8px;
+}
+
+/* ---- RESPONSIVE ---- */
+@media (max-width: 600px) {
+  .pixel-art-row {
+    flex-direction: column;
+    gap: 20px;
+  }
+  .counter-digit {
+    width: 24px;
+    height: 36px;
+    font-size: 18px;
+  }
+  .torches-container {
+    gap: 30px;
+  }
+}
+
+/* ---- LOADING SCREEN ---- */
+.loading-screen {
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: #000;
+  z-index: 100000;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  transition: opacity 0.5s ease-out;
+}
+
+.loading-screen.fade-out {
+  opacity: 0;
+  pointer-events: none;
+}
+
+.loading-bar-outer {
+  width: 300px;
+  max-width: 80vw;
+  height: 24px;
+  background: #1a1a1a;
+  border: 3px inset #555;
+  position: relative;
+  margin-top: 20px;
+}
+
+.loading-bar-inner {
+  height: 100%;
+  width: 0%;
+  background: linear-gradient(to bottom, var(--mc-green) 0%, var(--creeper-dark) 100%);
+  transition: width 0.3s;
+}
+
+.loading-text {
+  font-family: 'Press Start 2P', monospace;
+  font-size: 12px;
+  color: var(--mc-green);
+  margin-bottom: 10px;
+}
+
+/* ---- GLOW CONTAINER FOR CREEPER ---- */
+.creeper-wrapper {
+  position: relative;
+  display: inline-block;
+}
+
+.creeper-wrapper::after {
+  content: '';
+  position: absolute;
+  inset: -10px;
+  background: radial-gradient(circle, rgba(76,175,80,0.15) 0%, transparent 70%);
+  z-index: -1;
+  animation: creeper-glow 2s ease-in-out infinite alternate;
+}
+
+@keyframes creeper-glow {
+  from { opacity: 0.5; }
+  to { opacity: 1; }
+}
+
+/* ---- FAVORITES LIST ---- */
+.favorites-section {
+  background: linear-gradient(135deg, #0a1a3e, #1a0a2e);
+  border: 3px ridge var(--cyan);
+  padding: 25px;
+  margin: 20px 0;
+}
+
+.favorites-section h2 {
+  font-size: clamp(10px, 2.5vw, 14px);
+  color: var(--gold);
+  text-align: center;
+  margin-bottom: 15px;
+}
+
+.favorites-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 15px;
+}
+
+.fav-card {
+  background: rgba(0,0,0,0.4);
+  border: 2px solid #333;
+  padding: 12px;
+  font-family: 'Comic Sans MS', 'Comic Sans', cursive;
+  font-size: 13px;
+  color: #ccc;
+}
+
+.fav-card h3 {
+  font-family: 'Press Start 2P', monospace;
+  font-size: 9px;
+  color: var(--gold);
+  margin-bottom: 8px;
+}
+
+.fav-card ul {
+  list-style: none;
+  padding: 0;
+}
+
+.fav-card li {
+  padding: 2px 0;
+}
+
+.fav-card li::before {
+  content: '⭐ ';
+}
+
+/* Scrollbar global */
+::-webkit-scrollbar { width: 14px; }
+::-webkit-scrollbar-track { background: #0a0a2e; }
+::-webkit-scrollbar-thumb {
+  background: linear-gradient(to bottom, #555, #333);
+  border: 2px solid #222;
+}
+</style>
+</head>
+<body>
+
+<!-- LOADING SCREEN -->
+<div class="loading-screen" id="loadingScreen">
+  <div class="loading-text">Loading Alve's World...</div>
+  <div class="loading-bar-outer">
+    <div class="loading-bar-inner" id="loadingBar"></div>
+  </div>
+</div>
+
+<!-- KONAMI OVERLAY -->
+<div class="konami-overlay"></div>
+<div class="konami-text rainbow-text">KONAMI!!!</div>
+
+<!-- STARFIELD CANVAS -->
+<canvas id="starfield"></canvas>
+
+<!-- MUSIC BUTTON -->
+<button class="music-button" id="musicBtn" title="Toggle 8-bit tunes">
+  <span class="note">♪</span> <span id="musicLabel">MUSIC</span>
+</button>
+
+<!-- MAIN CONTENT -->
+<div class="main-content">
+
+  <!-- === TORCHES + HEADER === -->
+  <div class="torches-container">
+    <div class="torch"><div class="torch-flame-wrap"></div><div class="torch-stick"></div></div>
+    <div class="torch"><div class="torch-flame-wrap"></div><div class="torch-stick"></div></div>
+  </div>
+
+  <div class="header-section">
+    <h1 class="header-title rainbow-text">★ WELCOME TO ALVE'S WORLD ★</h1>
+    <div class="header-subtitle">~ The #1 Coolest Homepage on the Internet ~</div>
+  </div>
+
+  <!-- === FIRE DIVIDER === -->
+  <div class="fire-divider" id="fireDivider1"></div>
+
+  <!-- === PIXEL ART === -->
+  <div class="pixel-section">
+    <div class="pixel-art-row">
+
+      <!-- DIAMOND SWORD -->
+      <div class="diamond-sword" id="swordGrid"></div>
+
+      <!-- CREEPER FACE -->
+      <div class="creeper-wrapper">
+        <div class="creeper-face blink" id="creeperGrid"></div>
+      </div>
+
+      <!-- DIAMOND SWORD 2 -->
+      <div class="diamond-sword" id="swordGrid2" style="transform: rotate(-45deg) scaleX(-1);"></div>
+    </div>
+
+    <br>
+
+    <!-- UNDER CONSTRUCTION -->
+    <div class="under-construction">
+      <span class="construction-icon">🚧</span>
+      <span>!! UNDER CONSTRUCTION !!</span>
+      <span class="construction-icon">🔨</span>
+    </div>
+  </div>
+
+  <!-- === FIRE DIVIDER === -->
+  <div class="fire-divider" id="fireDivider2"></div>
+
+  <!-- === ABOUT === -->
+  <div class="about-section mc-border">
+    <h2>~* ABOUT ME *~<span class="new-badge">NEW!</span></h2>
+    <p class="about-text">
+      This is <b style="color: var(--gold)">Alve's</b> corner of the internet. 🌍<br><br>
+      He's <span style="color: var(--hot-pink)">11 years old</span> and he'll probably put cool stuff here eventually.<br><br>
+      For now just know that he is <span class="blink-text" style="color: var(--lime)">EXTREMELY COOL</span>
+      and very good at <span style="color: var(--creeper-green)">Minecraft</span>. 🎮
+    </p>
+  </div>
+
+  <!-- === FAVORITES === -->
+  <div class="favorites-section">
+    <h2>⭐ MY FAVORITE THINGS ⭐<span class="new-badge">NEW!</span></h2>
+    <div class="favorites-grid">
+      <div class="fav-card">
+        <h3>🎮 GAMES</h3>
+        <ul>
+          <li>Minecraft (obviously)</li>
+          <li>Roblox</li>
+          <li>Fortnite</li>
+          <li>Terraria</li>
+        </ul>
+      </div>
+      <div class="fav-card">
+        <h3>🍕 FOOD</h3>
+        <ul>
+          <li>Pizza</li>
+          <li>Tacos</li>
+          <li>Ice Cream</li>
+          <li>More Pizza</li>
+        </ul>
+      </div>
+      <div class="fav-card">
+        <h3>📺 STUFF</h3>
+        <ul>
+          <li>YouTube</li>
+          <li>Coding</li>
+          <li>Building stuff</li>
+          <li>Being cool</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- === FIRE DIVIDER === -->
+  <div class="fire-divider" id="fireDivider3"></div>
+
+  <!-- === VISITOR COUNTER === -->
+  <div class="counter-section">
+    <h2>📟 VISITOR COUNTER 📟</h2>
+    <div class="counter-display" id="counterDisplay">
+      <div class="counter-digit">0</div>
+      <div class="counter-digit">0</div>
+      <div class="counter-digit">0</div>
+      <div class="counter-digit">0</div>
+      <div class="counter-digit">0</div>
+      <div class="counter-digit">0</div>
+    </div>
+    <div class="counter-label">You are visitor #<span id="counterText">000000</span>!</div>
+  </div>
+
+  <!-- === FIRE DIVIDER === -->
+  <div class="fire-divider" id="fireDivider4"></div>
+
+  <!-- === GUESTBOOK === -->
+  <div class="guestbook-section">
+    <h2 class="rainbow-text">📖 SIGN MY GUESTBOOK!!! 📖</h2>
+    <form class="guestbook-form" id="guestbookForm">
+      <input type="text" id="gbName" placeholder="Your name (Steve?)" maxlength="30" required>
+      <textarea id="gbMessage" placeholder="Say something nice!! (or funny)" maxlength="200" required></textarea>
+      <button type="submit" class="mc-button">⚡ SIGN IT ⚡</button>
+    </form>
+    <div class="gb-status" id="gbStatus"></div>
+    <div class="guestbook-entries" id="guestbookEntries">
+      <div class="gb-entry" style="color: #555; font-style: italic;">Loading guestbook...</div>
+    </div>
+  </div>
+
+  <!-- === COOL LINKS === -->
+  <div class="cool-links">
+    <h2>🔗 COOL LINKS 🔗</h2>
+    <ul class="link-list">
+      <li><a href="https://www.minecraft.net" target="_blank">Minecraft Official</a></li>
+      <li><a href="https://www.youtube.com" target="_blank">YouTube</a></li>
+      <li><a href="https://en.wikipedia.org/wiki/Creeper_(Minecraft)" target="_blank">Creeper Wiki (know your enemy)</a></li>
+    </ul>
+  </div>
+
+  <!-- === FIRE DIVIDER === -->
+  <div class="fire-divider" id="fireDivider5"></div>
+
+  <!-- === MARQUEE === -->
+  <div class="marquee-section">
+    <div class="marquee-bar">
+      <div class="marquee-content">
+        <span>🔥 This page is best viewed in Netscape Navigator 4.0 at 800x600 🔥</span>
+        <span>💎 Made with mass and energy 💎</span>
+        <span>💥 No creepers were harmed in the making of this page 💥</span>
+        <span>⚡ Alve's World - Est. 2026 ⚡</span>
+        <span>🎮 Currently playing: Minecraft 🎮</span>
+        <span>🌟 You just lost The Game 🌟</span>
+        <span>⛏️ If you can read this you scrolled too far ⛏️</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- === BADGES === -->
+  <div class="badges-row">
+    <div class="badge-800x600">
+      BEST VIEWED AT<br>800 x 600
+    </div>
+    <div class="badge-html">
+      MADE WITH<br>HTML & VIBES
+    </div>
+    <div class="badge-mc">
+      CERTIFIED<br>MINECRAFT FAN
+    </div>
+  </div>
+
+  <!-- === WEB RING === -->
+  <div class="webring">
+    ← <a href="#">prev</a> |
+    🕸️ <b style="color: var(--gold)">Alve's World WebRing</b> 🕸️
+    | <a href="#">next</a> →
+  </div>
+
+  <!-- === FOOTER === -->
+  <div class="footer">
+    <div class="fire-divider" id="fireDivider6"></div>
+    <br>
+    &copy; 2026 Alve's World. All rights reserved.<br>
+    Made by Alve (with a little help from dad & AI)<br>
+    <span style="color: var(--hot-pink)">♥</span> Thanks for visiting! <span style="color: var(--hot-pink)">♥</span><br><br>
+    <span style="color: #333; font-size: 6px;">psst... try the konami code ↑↑↓↓←→←→BA</span>
+  </div>
+
+</div>
+
+<script>
+// ============================================
+// ALVE'S WORLD - JavaScript
+// ============================================
+
+const API_BASE = window.location.hostname === 'localhost' ? 'http://localhost:3001' : 'https://api-alve.petter.ai';
+
+// ---- LOADING SCREEN ----
+(function() {
+  const bar = document.getElementById('loadingBar');
+  let progress = 0;
+  const interval = setInterval(() => {
+    progress += Math.random() * 30 + 10;
+    if (progress >= 100) {
+      progress = 100;
+      clearInterval(interval);
+      setTimeout(() => {
+        document.getElementById('loadingScreen').classList.add('fade-out');
+        setTimeout(() => {
+          document.getElementById('loadingScreen').style.display = 'none';
+        }, 600);
+      }, 300);
+    }
+    bar.style.width = progress + '%';
+  }, 200);
+})();
+
+// ---- GENERATE FIRE DIVIDERS ----
+document.querySelectorAll('.fire-divider').forEach(div => {
+  const count = Math.floor(window.innerWidth / 20);
+  for (let i = 0; i < count; i++) {
+    const flame = document.createElement('div');
+    flame.className = 'flame';
+    flame.style.animationDelay = (Math.random() * 0.3) + 's';
+    div.appendChild(flame);
+  }
+});
+
+// ---- STARFIELD ----
+(function() {
+  const canvas = document.getElementById('starfield');
+  const ctx = canvas.getContext('2d');
+  let stars = [];
+  const STAR_COUNT = 200;
+
+  function resize() {
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+  }
+
+  function initStars() {
+    stars = [];
+    for (let i = 0; i < STAR_COUNT; i++) {
+      stars.push({
+        x: Math.random() * canvas.width,
+        y: Math.random() * canvas.height,
+        size: Math.random() * 2 + 0.5,
+        speed: Math.random() * 0.5 + 0.1,
+        brightness: Math.random(),
+        twinkleSpeed: Math.random() * 0.02 + 0.005
+      });
+    }
+  }
+
+  function draw() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    const time = Date.now() * 0.001;
+
+    stars.forEach(star => {
+      const twinkle = Math.sin(time * star.twinkleSpeed * 60 + star.x) * 0.5 + 0.5;
+      const alpha = 0.3 + twinkle * 0.7;
+
+      ctx.beginPath();
+      ctx.arc(star.x, star.y, star.size, 0, Math.PI * 2);
+      ctx.fillStyle = `rgba(255, 255, 255, ${alpha})`;
+      ctx.fill();
+
+      // move stars slowly downward
+      star.y += star.speed;
+      if (star.y > canvas.height) {
+        star.y = 0;
+        star.x = Math.random() * canvas.width;
+      }
+    });
+
+    requestAnimationFrame(draw);
+  }
+
+  resize();
+  initStars();
+  draw();
+  window.addEventListener('resize', () => { resize(); initStars(); });
+})();
+
+// ---- CREEPER FACE PIXEL ART ----
+(function() {
+  // 8x8 creeper face pattern
+  // l=light green, g=green, d=dark green, b=black (eyes/mouth)
+  const pattern = [
+    'l','g','g','g','g','g','g','l',
+    'g','g','g','g','g','g','g','g',
+    'g','b','b','g','g','b','b','g',
+    'g','b','b','g','g','b','b','g',
+    'g','g','g','b','b','g','g','g',
+    'g','g','b','b','b','b','g','g',
+    'g','g','b','b','b','b','g','g',
+    'g','g','b','g','g','b','g','g',
+  ];
+
+  const classMap = { l: 'px-l', g: 'px-g', d: 'px-d', b: 'px-b' };
+  const eyeIndices = [17,18,21,22,25,26,29,30]; // eye pixel positions
+
+  const grid = document.getElementById('creeperGrid');
+  pattern.forEach((c, i) => {
+    const div = document.createElement('div');
+    div.className = `px ${classMap[c]}`;
+    if (c === 'b' && eyeIndices.includes(i)) {
+      div.classList.add('eye-px');
+    }
+    grid.appendChild(div);
+  });
+})();
+
+// ---- DIAMOND SWORD PIXEL ART ----
+(function() {
+  // 16x16 diamond sword
+  // t=transparent, d=diamond, dl=diamond light, dd=diamond dark, b=brown, bl=brown light, g=gray, gl=gray light
+  const sword = [
+    't','t','t','t','t','t','t','t','t','t','t','t','t','t','dl','d',
+    't','t','t','t','t','t','t','t','t','t','t','t','t','dl','d','dd',
+    't','t','t','t','t','t','t','t','t','t','t','t','dl','d','dd','t',
+    't','t','t','t','t','t','t','t','t','t','t','dl','d','dd','t','t',
+    't','t','t','t','t','t','t','t','t','t','dl','d','dd','t','t','t',
+    't','t','t','t','t','t','t','t','t','dl','d','dd','t','t','t','t',
+    't','t','t','t','t','t','t','t','dl','d','dd','t','t','t','t','t',
+    't','t','t','t','t','t','t','dl','d','dd','t','t','t','t','t','t',
+    't','t','t','t','t','t','dl','d','dd','t','t','t','t','t','t','t',
+    't','t','t','t','t','dl','d','dd','t','t','t','t','t','t','t','t',
+    't','t','t','t','gl','g','dd','t','t','t','t','t','t','t','t','t',
+    't','t','t','gl','g','gl','t','t','t','t','t','t','t','t','t','t',
+    't','t','bl','b','g','t','t','t','t','t','t','t','t','t','t','t',
+    't','bl','b','bl','t','t','t','t','t','t','t','t','t','t','t','t',
+    'bl','b','bl','t','t','t','t','t','t','t','t','t','t','t','t','t',
+    'b','bl','t','t','t','t','t','t','t','t','t','t','t','t','t','t',
+  ];
+
+  const classMap = {
+    t:'sw-t', d:'sw-d', dl:'sw-dl', dd:'sw-dd',
+    b:'sw-b', bl:'sw-bl', g:'sw-g', gl:'sw-gl'
+  };
+
+  function buildSword(id) {
+    const grid = document.getElementById(id);
+    if (!grid) return;
+    sword.forEach(c => {
+      const div = document.createElement('div');
+      div.className = classMap[c];
+      grid.appendChild(div);
+    });
+  }
+
+  buildSword('swordGrid');
+  buildSword('swordGrid2');
+})();
+
+// ---- CURSOR TRAIL (SPARKLES) ----
+(function() {
+  const sparkles = ['✨', '⭐', '💎', '⛏️', '🔥', '💫'];
+  let lastTime = 0;
+
+  document.addEventListener('mousemove', (e) => {
+    const now = Date.now();
+    if (now - lastTime < 60) return; // throttle
+    lastTime = now;
+
+    const el = document.createElement('div');
+    el.className = 'sparkle';
+    el.textContent = sparkles[Math.floor(Math.random() * sparkles.length)];
+    el.style.left = e.clientX + 'px';
+    el.style.top = e.clientY + 'px';
+    document.body.appendChild(el);
+
+    setTimeout(() => el.remove(), 800);
+  });
+})();
+
+// ---- VISITOR COUNTER ----
+(function() {
+  async function loadCounter() {
+    try {
+      const res = await fetch(API_BASE + '/api/visit');
+      const data = await res.json();
+      displayCount(data.count || 0);
+    } catch (e) {
+      // If API is down, show a fun fallback
+      displayCount(Math.floor(Math.random() * 9000) + 1000);
+    }
+  }
+
+  function displayCount(count) {
+    const digits = document.querySelectorAll('#counterDisplay .counter-digit');
+    const str = String(count).padStart(digits.length, '0');
+    const counterText = document.getElementById('counterText');
+    counterText.textContent = str;
+
+    digits.forEach((digit, i) => {
+      setTimeout(() => {
+        digit.textContent = str[i];
+        digit.classList.add('rolling');
+        setTimeout(() => digit.classList.remove('rolling'), 600);
+      }, i * 150);
+    });
+  }
+
+  loadCounter();
+})();
+
+// ---- GUESTBOOK ----
+(function() {
+  const form = document.getElementById('guestbookForm');
+  const entries = document.getElementById('guestbookEntries');
+  const status = document.getElementById('gbStatus');
+
+  async function loadEntries() {
+    try {
+      const res = await fetch(API_BASE + '/api/guestbook');
+      const data = await res.json();
+      renderEntries(data.entries || []);
+    } catch (e) {
+      entries.innerHTML = '<div class="gb-entry" style="color: #555;">Guestbook is sleeping... try again later! 💤</div>';
+    }
+  }
+
+  function escapeHTML(str) {
+    const div = document.createElement('div');
+    div.textContent = str;
+    return div.innerHTML;
+  }
+
+  function renderEntries(list) {
+    if (list.length === 0) {
+      entries.innerHTML = '<div class="gb-entry" style="color: #555;">No entries yet... be the first! 🎉</div>';
+      return;
+    }
+
+    entries.innerHTML = list.map(entry => {
+      const date = new Date(entry.created_at);
+      const dateStr = date.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+      return `<div class="gb-entry">
+        <span class="gb-name">&lt;${escapeHTML(entry.name)}&gt;</span>
+        <span class="gb-msg">${escapeHTML(entry.message)}</span>
+        <span class="gb-date"> [${dateStr}]</span>
+      </div>`;
+    }).join('');
+  }
+
+  form.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const name = document.getElementById('gbName').value.trim();
+    const message = document.getElementById('gbMessage').value.trim();
+
+    if (!name || !message) return;
+
+    status.textContent = 'Sending...';
+    status.className = 'gb-status';
+
+    try {
+      const res = await fetch(API_BASE + '/api/guestbook', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ name, message })
+      });
+      const data = await res.json();
+
+      if (data.success) {
+        status.textContent = '✅ Signed! You are now famous!';
+        status.className = 'gb-status success';
+        form.reset();
+        loadEntries();
+      } else {
+        status.textContent = '❌ ' + (data.error || 'Something went wrong!');
+        status.className = 'gb-status error';
+      }
+    } catch (e) {
+      status.textContent = '❌ Could not reach the server... is it a creeper?';
+      status.className = 'gb-status error';
+    }
+
+    setTimeout(() => { status.textContent = ''; }, 5000);
+  });
+
+  loadEntries();
+})();
+
+// ---- 8-BIT MUSIC (Web Audio API) ----
+(function() {
+  const btn = document.getElementById('musicBtn');
+  const label = document.getElementById('musicLabel');
+  let audioCtx = null;
+  let playing = false;
+  let scheduledTimeout = null;
+  let gainNode = null;
+
+  // Simple Minecraft-ish melody in note frequencies
+  const melody = [
+    // Twinkly happy 8-bit tune
+    { freq: 523.25, dur: 0.2 },  // C5
+    { freq: 587.33, dur: 0.2 },  // D5
+    { freq: 659.25, dur: 0.2 },  // E5
+    { freq: 523.25, dur: 0.2 },  // C5
+    { freq: 659.25, dur: 0.3 },  // E5
+    { freq: 783.99, dur: 0.4 },  // G5
+    { freq: 0, dur: 0.2 },       // rest
+    { freq: 783.99, dur: 0.4 },  // G5
+    { freq: 0, dur: 0.2 },       // rest
+    { freq: 698.46, dur: 0.2 },  // F5
+    { freq: 659.25, dur: 0.2 },  // E5
+    { freq: 587.33, dur: 0.2 },  // D5
+    { freq: 523.25, dur: 0.3 },  // C5
+    { freq: 587.33, dur: 0.2 },  // D5
+    { freq: 523.25, dur: 0.2 },  // C5
+    { freq: 440.00, dur: 0.3 },  // A4
+    { freq: 0, dur: 0.2 },       // rest
+    { freq: 440.00, dur: 0.2 },  // A4
+    { freq: 493.88, dur: 0.2 },  // B4
+    { freq: 523.25, dur: 0.3 },  // C5
+    { freq: 587.33, dur: 0.2 },  // D5
+    { freq: 523.25, dur: 0.4 },  // C5
+    { freq: 0, dur: 0.4 },       // rest
+    { freq: 392.00, dur: 0.2 },  // G4
+    { freq: 440.00, dur: 0.2 },  // A4
+    { freq: 493.88, dur: 0.2 },  // B4
+    { freq: 523.25, dur: 0.3 },  // C5
+    { freq: 659.25, dur: 0.3 },  // E5
+    { freq: 587.33, dur: 0.2 },  // D5
+    { freq: 523.25, dur: 0.5 },  // C5
+    { freq: 0, dur: 0.5 },       // rest
+  ];
+
+  function playMelody() {
+    if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    gainNode = audioCtx.createGain();
+    gainNode.gain.value = 0.08;
+    gainNode.connect(audioCtx.destination);
+
+    let time = audioCtx.currentTime + 0.05;
+    let totalDuration = 0;
+
+    melody.forEach(note => {
+      if (note.freq > 0) {
+        // Square wave for that 8-bit sound
+        const osc = audioCtx.createOscillator();
+        osc.type = 'square';
+        osc.frequency.value = note.freq;
+
+        // Add slight vibrato
+        const vibrato = audioCtx.createOscillator();
+        const vibratoGain = audioCtx.createGain();
+        vibrato.frequency.value = 5;
+        vibratoGain.gain.value = 2;
+        vibrato.connect(vibratoGain);
+        vibratoGain.connect(osc.frequency);
+        vibrato.start(time);
+        vibrato.stop(time + note.dur);
+
+        // Envelope for cleaner sound
+        const env = audioCtx.createGain();
+        env.gain.setValueAtTime(0, time);
+        env.gain.linearRampToValueAtTime(1, time + 0.01);
+        env.gain.setValueAtTime(1, time + note.dur - 0.02);
+        env.gain.linearRampToValueAtTime(0, time + note.dur);
+
+        osc.connect(env);
+        env.connect(gainNode);
+        osc.start(time);
+        osc.stop(time + note.dur + 0.01);
+      }
+      time += note.dur;
+      totalDuration += note.dur;
+    });
+
+    // Loop
+    if (playing) {
+      scheduledTimeout = setTimeout(() => {
+        if (playing) playMelody();
+      }, totalDuration * 1000);
+    }
+  }
+
+  btn.addEventListener('click', () => {
+    if (!playing) {
+      playing = true;
+      btn.classList.add('playing');
+      label.textContent = 'STOP';
+      playMelody();
+    } else {
+      playing = false;
+      btn.classList.remove('playing');
+      label.textContent = 'MUSIC';
+      if (scheduledTimeout) clearTimeout(scheduledTimeout);
+      if (gainNode) {
+        gainNode.gain.setValueAtTime(gainNode.gain.value, audioCtx.currentTime);
+        gainNode.gain.linearRampToValueAtTime(0, audioCtx.currentTime + 0.1);
+      }
+    }
+  });
+})();
+
+// ---- KONAMI CODE EASTER EGG ----
+(function() {
+  const konamiSequence = [
+    'ArrowUp','ArrowUp','ArrowDown','ArrowDown',
+    'ArrowLeft','ArrowRight','ArrowLeft','ArrowRight',
+    'b','a'
+  ];
+  let konamiIndex = 0;
+  let chaosActive = false;
+
+  document.addEventListener('keydown', (e) => {
+    const key = e.key.length === 1 ? e.key.toLowerCase() : e.key;
+    if (key === konamiSequence[konamiIndex]) {
+      konamiIndex++;
+      if (konamiIndex === konamiSequence.length) {
+        konamiIndex = 0;
+        toggleChaos();
+      }
+    } else {
+      konamiIndex = 0;
+    }
+  });
+
+  function toggleChaos() {
+    chaosActive = !chaosActive;
+    document.body.classList.toggle('konami-chaos', chaosActive);
+
+    if (chaosActive) {
+      // Spawn a bunch of random emojis
+      for (let i = 0; i < 30; i++) {
+        setTimeout(() => {
+          const el = document.createElement('div');
+          el.style.cssText = `
+            position: fixed;
+            font-size: ${20 + Math.random() * 40}px;
+            left: ${Math.random() * 100}vw;
+            top: ${Math.random() * 100}vh;
+            z-index: 10001;
+            pointer-events: none;
+            animation: sparkle-fade 2s ease-out forwards;
+          `;
+          el.textContent = ['💥','🔥','⭐','🌈','💎','🎮','⚡','🍕','💀','🎉'][Math.floor(Math.random() * 10)];
+          document.body.appendChild(el);
+          setTimeout(() => el.remove(), 2000);
+        }, i * 100);
+      }
+    }
+  }
+})();
+
+</script>
+</body>
+</html>
