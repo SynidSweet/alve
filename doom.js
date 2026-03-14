@@ -922,13 +922,13 @@
 
     // Mouse look
     if (pointerLocked) {
-      gameState.player.rotation += mouseDeltaX * 0.002;
+      gameState.player.rotation -= mouseDeltaX * 0.002;
       mouseDeltaX = 0;
     }
 
     // Move player (from game-logic.js)
     if (forward !== 0 || strafe !== 0) {
-      movePlayer(gameState, forward, strafe, dt);
+      movePlayer(gameState, forward, -strafe, dt);
     }
 
     // Update game state (from game-logic.js)
