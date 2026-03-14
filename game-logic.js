@@ -92,7 +92,7 @@ const DOOM_E1M1_NOTES = [
 
 // ---- DOOM GAME LOGIC ----
 
-// Map definition: 1 = wall, 0 = open, 2 = creeper spawn
+// Map definition: 1 = wall, 0 = open, 2 = enemy spawn, 3 = secret wall (passable after IDCLIP)
 const DOOM_MAP = [
   [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
   [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
@@ -101,7 +101,7 @@ const DOOM_MAP = [
   [1,0,0,1,0,0,0,0,0,0,0,1,0,0,0,1],
   [1,0,0,0,0,0,0,2,0,0,0,0,0,0,0,1],
   [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
-  [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
+  [1,0,0,0,0,0,0,0,0,0,0,0,0,0,3,1],
   [1,1,1,0,0,0,1,1,1,1,0,0,0,1,1,1],
   [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
   [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
@@ -112,6 +112,34 @@ const DOOM_MAP = [
   [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
 ];
 
+// Secret wall position (the cell marked 3 in DOOM_MAP)
+const SECRET_WALL = { x: 14, z: 7 };
+
+// Pig Level map: circular pen with mud patches
+// 1 = wall, 0 = open, 2 = pig spawn, 4 = mud (open, visual only)
+const PIG_MAP = [
+  [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
+  [1,1,1,1,0,0,0,0,0,0,0,0,1,1,1,1],
+  [1,1,0,0,0,0,0,0,0,0,0,0,0,0,1,1],
+  [1,0,0,0,0,4,0,0,0,0,4,0,0,0,0,1],
+  [1,0,0,0,0,4,4,0,0,4,4,0,0,0,0,1],
+  [1,0,0,0,0,0,0,0,0,0,0,0,0,2,0,1],
+  [1,0,0,4,0,0,0,0,0,0,0,0,4,0,0,1],
+  [1,0,0,4,4,0,0,0,0,0,0,4,4,0,0,1],
+  [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
+  [1,0,2,0,0,0,0,0,0,0,0,0,0,0,0,1],
+  [1,0,0,0,0,4,0,0,0,0,4,0,0,0,0,1],
+  [1,0,0,0,4,4,0,0,0,0,4,4,0,0,2,1],
+  [1,1,0,0,0,0,0,0,0,0,0,0,0,0,1,1],
+  [1,1,0,0,0,0,0,2,0,0,0,0,0,0,1,1],
+  [1,1,1,1,0,0,0,0,0,0,0,0,1,1,1,1],
+  [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
+];
+
+const PIG_MAX_HEALTH = 2;
+const PIG_DAMAGE = 8;
+const PIG_SPEED = 2.0; // pigs are fast!
+
 const CREEPER_MAX_HEALTH = 3;
 const PLAYER_MAX_HEALTH = 100;
 const PLAYER_MAX_AMMO = 50;
@@ -121,31 +149,39 @@ const CREEPER_SPEED = 1.5; // units per second
 const CREEPER_ATTACK_RANGE = 1.5;
 const SHOOT_RANGE = 20;
 
-function createGameState() {
+function createGameState(level) {
+  level = level || 'doom';
   return {
+    level: level, // 'doom' or 'pig'
     player: {
-      x: 1.5,
-      z: 1.5,
-      rotation: 0, // radians
+      x: level === 'pig' ? 8.5 : 1.5,
+      z: level === 'pig' ? 8.5 : 1.5,
+      rotation: 0,
       health: PLAYER_MAX_HEALTH,
       ammo: PLAYER_MAX_AMMO,
       score: 0,
       alive: true,
     },
-    creepers: [],
+    creepers: [], // also used for pigs
     projectiles: [],
     spawnTimer: 0,
-    spawnInterval: 5, // seconds
+    spawnInterval: level === 'pig' ? 3 : 5,
     gameTime: 0,
     gameOver: false,
+    secretWallOpen: false, // IDCLIP activated
   };
 }
 
-function getSpawnPoints() {
+function getActiveMap(state) {
+  return state.level === 'pig' ? PIG_MAP : DOOM_MAP;
+}
+
+function getSpawnPoints(state) {
+  const map = getActiveMap(state);
   const points = [];
-  for (let z = 0; z < DOOM_MAP.length; z++) {
-    for (let x = 0; x < DOOM_MAP[z].length; x++) {
-      if (DOOM_MAP[z][x] === 2) {
+  for (let z = 0; z < map.length; z++) {
+    for (let x = 0; x < map[z].length; x++) {
+      if (map[z][x] === 2) {
         points.push({ x: x + 0.5, z: z + 0.5 });
       }
     }
@@ -154,28 +190,38 @@ function getSpawnPoints() {
 }
 
 function spawnCreeper(state) {
-  const spawnPoints = getSpawnPoints();
+  const spawnPoints = getSpawnPoints(state);
   if (spawnPoints.length === 0) return null;
 
   const point = spawnPoints[Math.floor(Math.random() * spawnPoints.length)];
+  const isPig = state.level === 'pig';
   const creeper = {
     id: Date.now() + Math.random(),
     x: point.x,
     z: point.z,
-    health: CREEPER_MAX_HEALTH,
+    health: isPig ? PIG_MAX_HEALTH : CREEPER_MAX_HEALTH,
     alive: true,
+    type: isPig ? 'pig' : 'creeper',
   };
   state.creepers.push(creeper);
   return creeper;
 }
 
-function isWall(x, z) {
+function isWall(x, z, state) {
+  const map = state ? getActiveMap(state) : DOOM_MAP;
   const mapX = Math.floor(x);
   const mapZ = Math.floor(z);
-  if (mapZ < 0 || mapZ >= DOOM_MAP.length || mapX < 0 || mapX >= DOOM_MAP[0].length) {
+  if (mapZ < 0 || mapZ >= map.length || mapX < 0 || mapX >= map[0].length) {
     return true;
   }
-  return DOOM_MAP[mapZ][mapX] === 1;
+  const cell = map[mapZ][mapX];
+  // Secret wall (3) is passable when open
+  if (cell === 3 && state && state.secretWallOpen) {
+    return false;
+  }
+  // Mud (4) is open ground
+  if (cell === 4) return false;
+  return cell === 1 || cell === 3;
 }
 
 function movePlayer(state, forward, strafe, dt) {
@@ -187,12 +233,21 @@ function movePlayer(state, forward, strafe, dt) {
   const newZ = state.player.z + dz;
   const radius = 0.3;
 
-  // Collision with walls (slide along walls)
-  if (!isWall(newX + radius, state.player.z) && !isWall(newX - radius, state.player.z)) {
+  if (!isWall(newX + radius, state.player.z, state) && !isWall(newX - radius, state.player.z, state)) {
     state.player.x = newX;
   }
-  if (!isWall(state.player.x, newZ + radius) && !isWall(state.player.x, newZ - radius)) {
+  if (!isWall(state.player.x, newZ + radius, state) && !isWall(state.player.x, newZ - radius, state)) {
     state.player.z = newZ;
+  }
+
+  // Check if player walked through secret wall into pig dimension
+  if (state.level === 'doom' && state.secretWallOpen) {
+    const mapX = Math.floor(state.player.x);
+    const mapZ = Math.floor(state.player.z);
+    // If player is beyond the secret wall (outside the doom map bounds)
+    if (mapX >= DOOM_MAP[0].length - 1 || mapX < 0 || mapZ < 0 || mapZ >= DOOM_MAP.length) {
+      return 'enter_pig_level';
+    }
   }
 }
 
@@ -245,37 +300,55 @@ function shoot(state) {
   return { hit: false };
 }
 
+function activateSecretWall(state) {
+  state.secretWallOpen = true;
+}
+
+function switchToPigLevel(state) {
+  state.level = 'pig';
+  state.player.x = 8.5;
+  state.player.z = 8.5;
+  state.player.rotation = 0;
+  state.player.health = PLAYER_MAX_HEALTH;
+  state.player.ammo = PLAYER_MAX_AMMO;
+  state.creepers = [];
+  state.spawnTimer = 0;
+  state.spawnInterval = 3;
+  state.gameTime = 0;
+  // Keep score from doom level
+}
+
 function updateCreepers(state, dt) {
+  const isPig = state.level === 'pig';
+  const damage = isPig ? PIG_DAMAGE : CREEPER_DAMAGE;
+  const speed = isPig ? PIG_SPEED : CREEPER_SPEED;
+
   for (const creeper of state.creepers) {
     if (!creeper.alive) continue;
 
-    // Move toward player
     const dx = state.player.x - creeper.x;
     const dz = state.player.z - creeper.z;
     const dist = Math.sqrt(dx * dx + dz * dz);
 
     if (dist < CREEPER_ATTACK_RANGE) {
-      // Attack player
-      state.player.health -= CREEPER_DAMAGE * dt;
+      state.player.health -= damage * dt;
       if (state.player.health <= 0) {
         state.player.health = 0;
         state.player.alive = false;
         state.gameOver = true;
       }
     } else {
-      // Move toward player
-      const moveX = (dx / dist) * CREEPER_SPEED * dt;
-      const moveZ = (dz / dist) * CREEPER_SPEED * dt;
+      const moveX = (dx / dist) * speed * dt;
+      const moveZ = (dz / dist) * speed * dt;
 
       const newX = creeper.x + moveX;
       const newZ = creeper.z + moveZ;
 
-      if (!isWall(newX, creeper.z)) creeper.x = newX;
-      if (!isWall(creeper.x, newZ)) creeper.z = newZ;
+      if (!isWall(newX, creeper.z, state)) creeper.x = newX;
+      if (!isWall(creeper.x, newZ, state)) creeper.z = newZ;
     }
   }
 
-  // Remove dead creepers
   state.creepers = state.creepers.filter(c => c.alive);
 }
 
@@ -285,7 +358,6 @@ function updateGameState(state, dt) {
   state.gameTime += dt;
   state.spawnTimer += dt;
 
-  // Spawn creepers periodically (faster as game progresses)
   const adjustedInterval = Math.max(1.5, state.spawnInterval - state.gameTime * 0.05);
   if (state.spawnTimer >= adjustedInterval && state.creepers.length < 10) {
     spawnCreeper(state);
@@ -301,6 +373,11 @@ if (typeof module !== 'undefined' && module.exports) {
     createCheatDetector,
     DOOM_E1M1_NOTES,
     DOOM_MAP,
+    PIG_MAP,
+    SECRET_WALL,
+    PIG_MAX_HEALTH,
+    PIG_DAMAGE,
+    PIG_SPEED,
     CREEPER_MAX_HEALTH,
     PLAYER_MAX_HEALTH,
     PLAYER_MAX_AMMO,
@@ -310,11 +387,14 @@ if (typeof module !== 'undefined' && module.exports) {
     CREEPER_ATTACK_RANGE,
     SHOOT_RANGE,
     createGameState,
+    getActiveMap,
     getSpawnPoints,
     spawnCreeper,
     isWall,
     movePlayer,
     shoot,
+    activateSecretWall,
+    switchToPigLevel,
     updateCreepers,
     updateGameState,
   };

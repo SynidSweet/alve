@@ -3,11 +3,17 @@ const {
   createCheatDetector,
   DOOM_E1M1_NOTES,
   DOOM_MAP,
+  PIG_MAP,
+  SECRET_WALL,
+  PIG_MAX_HEALTH,
+  PIG_DAMAGE,
+  PIG_SPEED,
   CREEPER_MAX_HEALTH,
   PLAYER_MAX_HEALTH,
   PLAYER_MAX_AMMO,
   SHOOT_DAMAGE,
   CREEPER_DAMAGE,
+  CREEPER_SPEED,
   CREEPER_ATTACK_RANGE,
   createGameState,
   getSpawnPoints,
@@ -15,6 +21,8 @@ const {
   isWall,
   movePlayer,
   shoot,
+  activateSecretWall,
+  switchToPigLevel,
   updateCreepers,
   updateGameState,
 } = require('../game-logic.js');
@@ -197,12 +205,12 @@ test('map has walls on all borders', () => {
 });
 
 test('map has spawn points', () => {
-  const spawns = getSpawnPoints();
+  const spawns = getSpawnPoints(createGameState());
   assert(spawns.length > 0, 'Map should have at least one spawn point');
 });
 
 test('spawn points are not on walls', () => {
-  const spawns = getSpawnPoints();
+  const spawns = getSpawnPoints(createGameState());
   for (const sp of spawns) {
     const mapX = Math.floor(sp.x);
     const mapZ = Math.floor(sp.z);
@@ -542,6 +550,138 @@ test('game stops updating when game over', () => {
   state.gameTime = 5;
   updateGameState(state, 1);
   assert.strictEqual(state.gameTime, 5, 'Game time should not advance when game over');
+});
+
+// ============================================
+// SECRET WALL & IDCLIP TESTS
+// ============================================
+console.log('\n🔓 Secret Wall (IDCLIP)');
+
+test('secret wall blocks movement by default', () => {
+  const state = createGameState();
+  assert(isWall(SECRET_WALL.x, SECRET_WALL.z, state), 'Secret wall should block before IDCLIP');
+});
+
+test('secret wall becomes passable after IDCLIP', () => {
+  const state = createGameState();
+  activateSecretWall(state);
+  assert(!isWall(SECRET_WALL.x, SECRET_WALL.z, state), 'Secret wall should be passable after IDCLIP');
+});
+
+test('other walls stay solid after IDCLIP', () => {
+  const state = createGameState();
+  activateSecretWall(state);
+  assert(isWall(0, 0, state), 'Regular walls should still block');
+  assert(isWall(0, 7, state), 'Border walls should still block');
+});
+
+test('secret wall is in DOOM_MAP as cell type 3', () => {
+  assert.strictEqual(DOOM_MAP[SECRET_WALL.z][SECRET_WALL.x], 3, 'Secret wall should be type 3 in map');
+});
+
+// ============================================
+// PIG LEVEL TESTS
+// ============================================
+console.log('\n🐷 Pig Level');
+
+test('pig map is rectangular with walls on borders', () => {
+  const w = PIG_MAP[0].length;
+  for (const row of PIG_MAP) {
+    assert.strictEqual(row.length, w, 'All rows should have same width');
+  }
+  for (let x = 0; x < w; x++) {
+    assert.strictEqual(PIG_MAP[0][x], 1, 'Top border should be wall');
+    assert.strictEqual(PIG_MAP[PIG_MAP.length-1][x], 1, 'Bottom border should be wall');
+  }
+  for (let z = 0; z < PIG_MAP.length; z++) {
+    assert.strictEqual(PIG_MAP[z][0], 1, 'Left border should be wall');
+    assert.strictEqual(PIG_MAP[z][w-1], 1, 'Right border should be wall');
+  }
+});
+
+test('pig map has spawn points', () => {
+  const state = createGameState('pig');
+  const spawns = getSpawnPoints(state);
+  assert(spawns.length > 0, 'Pig map should have spawn points');
+});
+
+test('pig level creates state with correct defaults', () => {
+  const state = createGameState('pig');
+  assert.strictEqual(state.level, 'pig');
+  assert.strictEqual(state.player.x, 8.5);
+  assert.strictEqual(state.player.z, 8.5);
+  assert.strictEqual(state.spawnInterval, 3, 'Pigs spawn faster');
+});
+
+test('pig level player starts in open space', () => {
+  const state = createGameState('pig');
+  assert(!isWall(state.player.x, state.player.z, state), 'Player should not start in a wall');
+});
+
+test('pig spawns have pig type', () => {
+  const state = createGameState('pig');
+  const pig = spawnCreeper(state);
+  assert.strictEqual(pig.type, 'pig');
+  assert.strictEqual(pig.health, PIG_MAX_HEALTH);
+});
+
+test('doom spawns have creeper type', () => {
+  const state = createGameState('doom');
+  const creeper = spawnCreeper(state);
+  assert.strictEqual(creeper.type, 'creeper');
+  assert.strictEqual(creeper.health, CREEPER_MAX_HEALTH);
+});
+
+test('switchToPigLevel preserves score and transitions', () => {
+  const state = createGameState();
+  state.player.score = 500;
+  state.creepers.push({ id: 1, x: 5, z: 5, health: 3, alive: true });
+  switchToPigLevel(state);
+
+  assert.strictEqual(state.level, 'pig');
+  assert.strictEqual(state.player.score, 500, 'Score should be preserved');
+  assert.strictEqual(state.player.x, 8.5, 'Player should be repositioned');
+  assert.strictEqual(state.player.health, PLAYER_MAX_HEALTH, 'Health should be reset');
+  assert.strictEqual(state.creepers.length, 0, 'Creepers should be cleared');
+  assert.strictEqual(state.spawnInterval, 3, 'Spawn interval should be pig speed');
+});
+
+test('pigs do pig damage and move at pig speed', () => {
+  const state = createGameState('pig');
+  state.player.x = 5;
+  state.player.z = 5;
+
+  // Place pig in attack range
+  state.creepers.push({
+    id: 1, x: 5.5, z: 5, health: PIG_MAX_HEALTH, alive: true, type: 'pig'
+  });
+
+  updateCreepers(state, 1);
+  const damageTaken = PLAYER_MAX_HEALTH - state.player.health;
+  assert(damageTaken > 0, 'Pig should deal damage');
+  // Pig damage is PIG_DAMAGE per second
+  assert(Math.abs(damageTaken - PIG_DAMAGE) < 0.1, 'Damage should be PIG_DAMAGE rate');
+});
+
+test('pigs move faster than creepers', () => {
+  assert(PIG_SPEED > CREEPER_SPEED, 'Pigs should be faster');
+});
+
+test('mud cells (4) are passable', () => {
+  const state = createGameState('pig');
+  // Find a mud cell in PIG_MAP
+  let mudFound = false;
+  for (let z = 0; z < PIG_MAP.length; z++) {
+    for (let x = 0; x < PIG_MAP[z].length; x++) {
+      if (PIG_MAP[z][x] === 4) {
+        assert(!isWall(x + 0.5, z + 0.5, state), 'Mud should be passable');
+        mudFound = true;
+        break;
+      }
+    }
+    if (mudFound) break;
+  }
+  assert(mudFound, 'Pig map should contain mud cells');
 });
 
 // ============================================
