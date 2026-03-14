@@ -1754,9 +1754,6 @@
       secretWallMessageTimer -= dt;
     }
 
-    // Secret wall: no visual hints - player must explore to find it
-    }
-
     // Update HUD
     updateHUD();
 
