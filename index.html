@@ -1002,6 +1002,87 @@ body.konami-chaos .konami-text {
   background: linear-gradient(to bottom, #555, #333);
   border: 2px solid #222;
 }
+
+/* ---- DOOM IDKFA EFFECTS ---- */
+
+/* Full-screen red flash overlay */
+.doom-flash {
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  z-index: 99998;
+  pointer-events: none;
+  background: rgba(255, 0, 0, 0.6);
+  animation: doom-flash-anim 0.4s ease-out forwards;
+}
+
+@keyframes doom-flash-anim {
+  0% { opacity: 1; }
+  100% { opacity: 0; }
+}
+
+/* Bottom-anchored Doom HUD bar */
+.doom-hud {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 99998;
+  background: #000;
+  border-top: 3px solid #00FF00;
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  padding: 12px 20px;
+  font-family: 'Press Start 2P', monospace;
+  color: #00FF00;
+  animation: doom-hud-appear 0.3s ease-out;
+}
+
+.doom-hud.fade-out {
+  animation: doom-hud-disappear 0.5s ease-in forwards;
+}
+
+@keyframes doom-hud-appear {
+  0% { transform: translateY(100%); opacity: 0; }
+  100% { transform: translateY(0); opacity: 1; }
+}
+
+@keyframes doom-hud-disappear {
+  0% { transform: translateY(0); opacity: 1; }
+  100% { transform: translateY(100%); opacity: 0; }
+}
+
+.doom-hud .doom-weapon-text {
+  font-size: clamp(10px, 2vw, 16px);
+  text-shadow: 0 0 8px #00FF00;
+  letter-spacing: 2px;
+}
+
+.doom-hud .doom-ammo {
+  font-size: clamp(18px, 4vw, 32px);
+  color: #00FF00;
+  text-shadow: 0 0 12px #00FF00, 0 0 24px rgba(0, 255, 0, 0.4);
+}
+
+/* Doom marine face - pixel art via CSS grid */
+.doom-hud .doom-face {
+  display: grid;
+  grid-template-columns: repeat(8, 1fr);
+  grid-template-rows: repeat(8, 1fr);
+  width: 48px;
+  height: 48px;
+  image-rendering: pixelated;
+  border: 2px solid #00FF00;
+}
+
+.doom-face .df { width: 100%; height: 100%; }
+.df-skin { background: #D2A068; }
+.df-dark { background: #B8834A; }
+.df-eye  { background: #FFFFFF; }
+.df-pupil { background: #000000; }
+.df-hair { background: #5A3A1A; }
+.df-mouth { background: #8B0000; }
+.df-bg   { background: #333333; }
 </style>
 </head>
 <body>
@@ -1017,6 +1098,14 @@ body.konami-chaos .konami-text {
 <!-- KONAMI OVERLAY -->
 <div class="konami-overlay"></div>
 <div class="konami-text rainbow-text">KONAMI!!!</div>
+
+<!-- DOOM GAME CONTAINER (for IDDQD cheat) -->
+<div id="doom-container" style="display:none; position:fixed; inset:0; z-index:99999; background:#000;">
+  <div id="doom-loading" style="display:flex; align-items:center; justify-content:center; height:100%; color:#ff0000; font-family:'Press Start 2P'; font-size:24px;">LOADING DOOM...</div>
+  <canvas id="doom-canvas" style="width:100%; height:100%;"></canvas>
+  <div id="doom-hud-game" style="position:absolute; bottom:0; left:0; right:0;"></div>
+  <button id="doom-exit" style="position:absolute; top:10px; right:10px; z-index:100000; font-family:'Press Start 2P'; font-size:12px; background:#ff0000; color:#fff; border:2px solid #ff0000; padding:8px 16px; cursor:pointer;">ESC TO EXIT</button>
+</div>
 
 <!-- STARFIELD CANVAS -->
 <canvas id="starfield"></canvas>
@@ -1206,10 +1295,14 @@ body.konami-chaos .konami-text {
     &copy; 2026 Alve's World. All rights reserved.<br>
     Made by Alve (with a little help from dad & AI)<br>
     <span style="color: var(--hot-pink)">♥</span> Thanks for visiting! <span style="color: var(--hot-pink)">♥</span><br><br>
-    <span style="color: #333; font-size: 6px;">psst... try the konami code ↑↑↓↓←→←→BA</span>
+    <span style="color: #333; font-size: 6px;">psst... try the konami code ↑↑↓↓←→←→BA</span><br>
+    <span style="color: #333; font-size: 6px;">...also try some doom codes 😈</span>
   </div>
 
 </div>
+
+<!-- Load shared game logic (cheat detector, Doom notes, game state) -->
+<script src="game-logic.js"></script>
 
 <script>
 // ============================================
@@ -1619,28 +1712,11 @@ document.querySelectorAll('.fire-divider').forEach(div => {
   });
 })();
 
-// ---- KONAMI CODE EASTER EGG ----
+// ---- UNIFIED CHEAT CODE SYSTEM ----
+// Uses createCheatDetector from game-logic.js for Konami, IDKFA, and IDDQD
 (function() {
-  const konamiSequence = [
-    'ArrowUp','ArrowUp','ArrowDown','ArrowDown',
-    'ArrowLeft','ArrowRight','ArrowLeft','ArrowRight',
-    'b','a'
-  ];
-  let konamiIndex = 0;
+  // === KONAMI CODE: Chaos Mode (existing behavior preserved) ===
   let chaosActive = false;
-
-  document.addEventListener('keydown', (e) => {
-    const key = e.key.length === 1 ? e.key.toLowerCase() : e.key;
-    if (key === konamiSequence[konamiIndex]) {
-      konamiIndex++;
-      if (konamiIndex === konamiSequence.length) {
-        konamiIndex = 0;
-        toggleChaos();
-      }
-    } else {
-      konamiIndex = 0;
-    }
-  });
 
   function toggleChaos() {
     chaosActive = !chaosActive;
@@ -1667,6 +1743,234 @@ document.querySelectorAll('.fire-divider').forEach(div => {
       }
     }
   }
+
+  // === IDKFA: Doom "All Weapons" Effects ===
+  let idkfaActive = false;
+  let idkfaCursorActive = false;
+
+  function activateIDKFA() {
+    if (idkfaActive) return;
+    idkfaActive = true;
+
+    // 1. Play Doom E1M1 theme via Web Audio API
+    playDoomTheme();
+
+    // 2. Flash the screen red
+    flashScreenRed();
+
+    // 3. Show Doom-style HUD overlay
+    showDoomHUD();
+
+    // 4. Change cursor trail to bullet/shell emojis
+    idkfaCursorActive = true;
+
+    // 5. After 6 seconds, fade out and restore
+    setTimeout(() => {
+      const hud = document.querySelector('.doom-hud');
+      if (hud) {
+        hud.classList.add('fade-out');
+        setTimeout(() => hud.remove(), 500);
+      }
+      idkfaCursorActive = false;
+      idkfaActive = false;
+    }, 6000);
+  }
+
+  function playDoomTheme() {
+    const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    const masterGain = audioCtx.createGain();
+    masterGain.gain.value = 0.12;
+    masterGain.connect(audioCtx.destination);
+
+    const startTime = audioCtx.currentTime + 0.05;
+
+    DOOM_E1M1_NOTES.forEach(([freq, dur, offset]) => {
+      const noteStart = startTime + offset;
+
+      // Square wave oscillator for that classic Doom sound
+      const osc = audioCtx.createOscillator();
+      osc.type = 'square';
+      osc.frequency.value = freq;
+
+      // Gain envelope for each note (attack/release)
+      const env = audioCtx.createGain();
+      env.gain.setValueAtTime(0, noteStart);
+      env.gain.linearRampToValueAtTime(1, noteStart + 0.01);
+      env.gain.setValueAtTime(1, noteStart + dur - 0.02);
+      env.gain.linearRampToValueAtTime(0, noteStart + dur);
+
+      osc.connect(env);
+      env.connect(masterGain);
+      osc.start(noteStart);
+      osc.stop(noteStart + dur + 0.01);
+    });
+  }
+
+  function flashScreenRed() {
+    const flash = document.createElement('div');
+    flash.className = 'doom-flash';
+    document.body.appendChild(flash);
+    // Remove after animation completes
+    setTimeout(() => flash.remove(), 400);
+  }
+
+  function showDoomHUD() {
+    // Remove existing HUD if present
+    const existing = document.querySelector('.doom-hud');
+    if (existing) existing.remove();
+
+    const hud = document.createElement('div');
+    hud.className = 'doom-hud';
+
+    // Left: "ALL WEAPONS" text
+    const weaponText = document.createElement('div');
+    weaponText.className = 'doom-weapon-text';
+    weaponText.textContent = 'ALL WEAPONS';
+
+    // Center: Doom marine face (8x8 pixel art grid)
+    const face = document.createElement('div');
+    face.className = 'doom-face';
+    // Doom marine face pattern:
+    // h=hair, s=skin, d=dark skin, e=eye white, p=pupil, m=mouth, b=background
+    const facePattern = [
+      'b','h','h','h','h','h','h','b',
+      'h','h','h','h','h','h','h','h',
+      's','s','s','s','s','s','s','s',
+      's','e','p','s','s','e','p','s',
+      's','s','s','d','d','s','s','s',
+      's','s','s','s','s','s','s','s',
+      's','s','m','m','m','m','s','s',
+      'b','s','s','s','s','s','s','b',
+    ];
+    const faceClassMap = {
+      h: 'df-hair', s: 'df-skin', d: 'df-dark',
+      e: 'df-eye', p: 'df-pupil', m: 'df-mouth', b: 'df-bg'
+    };
+    facePattern.forEach(c => {
+      const px = document.createElement('div');
+      px.className = 'df ' + faceClassMap[c];
+      face.appendChild(px);
+    });
+
+    // Right: Ammo counter
+    const ammo = document.createElement('div');
+    ammo.className = 'doom-ammo';
+    ammo.textContent = '999';
+
+    hud.appendChild(weaponText);
+    hud.appendChild(face);
+    hud.appendChild(ammo);
+
+    document.body.appendChild(hud);
+  }
+
+  // === IDDQD: Launch Doom Game ===
+  let doomLoading = false;
+
+  function activateIDDQD() {
+    if (doomLoading) return;
+    doomLoading = true;
+
+    const container = document.getElementById('doom-container');
+    const loading = document.getElementById('doom-loading');
+    const exitBtn = document.getElementById('doom-exit');
+
+    // Show the container with loading message
+    container.style.display = 'block';
+    loading.style.display = 'flex';
+
+    // Load Three.js from CDN, then doom.js
+    loadScript('https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js', () => {
+      loadScript('doom.js', () => {
+        // Hide loading text
+        loading.style.display = 'none';
+        // Launch the game (doom.js exposes window.launchDoomGame)
+        if (typeof window.launchDoomGame === 'function') {
+          window.launchDoomGame();
+        }
+        doomLoading = false;
+      });
+    });
+
+    // Exit button handler
+    function exitDoom() {
+      container.style.display = 'none';
+      if (typeof window.stopDoomGame === 'function') {
+        window.stopDoomGame();
+      }
+      exitBtn.removeEventListener('click', exitDoom);
+      document.removeEventListener('keydown', escHandler);
+    }
+
+    function escHandler(e) {
+      if (e.key === 'Escape') exitDoom();
+    }
+
+    exitBtn.addEventListener('click', exitDoom);
+    document.addEventListener('keydown', escHandler);
+  }
+
+  function loadScript(src, callback) {
+    // Check if script is already loaded
+    const existing = document.querySelector(`script[src="${src}"]`);
+    if (existing) {
+      callback();
+      return;
+    }
+    const script = document.createElement('script');
+    script.src = src;
+    script.onload = callback;
+    script.onerror = () => {
+      console.error('Failed to load script:', src);
+      doomLoading = false;
+    };
+    document.head.appendChild(script);
+  }
+
+  // === Cursor trail override when IDKFA is active ===
+  // Patch the existing cursor trail to use doom emojis while IDKFA is active
+  const doomSparkles = ['🔫', '💥', '🔥'];
+  const normalSparkles = ['✨', '⭐', '💎', '⛏️', '🔥', '💫'];
+
+  document.addEventListener('mousemove', (e) => {
+    if (!idkfaCursorActive) return;
+    // Throttled by the existing sparkle handler; this adds extra doom sparkles
+    const el = document.createElement('div');
+    el.className = 'sparkle';
+    el.textContent = doomSparkles[Math.floor(Math.random() * doomSparkles.length)];
+    el.style.left = (e.clientX + (Math.random() * 20 - 10)) + 'px';
+    el.style.top = (e.clientY + (Math.random() * 20 - 10)) + 'px';
+    document.body.appendChild(el);
+    setTimeout(() => el.remove(), 800);
+  });
+
+  // === Create unified cheat detector using game-logic.js ===
+  const cheatDetector = createCheatDetector([
+    {
+      name: 'konami',
+      sequence: [
+        'ArrowUp', 'ArrowUp', 'ArrowDown', 'ArrowDown',
+        'ArrowLeft', 'ArrowRight', 'ArrowLeft', 'ArrowRight',
+        'b', 'a'
+      ],
+      onActivate: toggleChaos
+    },
+    {
+      name: 'idkfa',
+      sequence: 'idkfa',
+      onActivate: activateIDKFA
+    },
+    {
+      name: 'iddqd',
+      sequence: 'iddqd',
+      onActivate: activateIDDQD
+    }
+  ]);
+
+  // Single keydown listener for all cheat codes
+  document.addEventListener('keydown', (e) => {
+    cheatDetector.handleKey(e.key);
+  });
 })();
 
 </script>
