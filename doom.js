@@ -40,8 +40,6 @@
   let cheatDetector = null;
 
   // Secret wall state
-  let secretWallMesh = null;
-  let secretWallParticles = null;
   let secretWallMessageTimer = 0;
 
   // Level transition state
@@ -538,15 +536,6 @@
     }
     mudMeshes = [];
 
-    // Remove secret wall particles
-    if (secretWallParticles) {
-      scene.remove(secretWallParticles);
-      if (secretWallParticles.geometry) secretWallParticles.geometry.dispose();
-      if (secretWallParticles.material) secretWallParticles.material.dispose();
-      secretWallParticles = null;
-    }
-
-    secretWallMesh = null;
   }
 
   function clearCreepers() {
@@ -594,26 +583,10 @@
     for (var z = 0; z < DOOM_MAP.length; z++) {
       for (var x = 0; x < DOOM_MAP[z].length; x++) {
         if (DOOM_MAP[z][x] === 1 || DOOM_MAP[z][x] === 3) {
-          var mat = wallMat;
-          // Secret wall gets its own material for pulsing
-          if (DOOM_MAP[z][x] === 3) {
-            mat = new THREE.MeshStandardMaterial({
-              map: wallTexture,
-              roughness: 0.9,
-              metalness: 0.1,
-              emissive: new THREE.Color(0x000000),
-              emissiveIntensity: 0,
-            });
-          }
-          var mesh = new THREE.Mesh(wallGeo, mat);
+          var mesh = new THREE.Mesh(wallGeo, wallMat);
           mesh.position.set(x + 0.5, wallHeight / 2, z + 0.5);
           scene.add(mesh);
           wallMeshes.push(mesh);
-
-          // Track secret wall mesh
-          if (x === SECRET_WALL.x && z === SECRET_WALL.z) {
-            secretWallMesh = mesh;
-          }
         }
       }
     }
@@ -644,8 +617,7 @@
     ceilingMesh.position.set(mapW / 2, 2, mapH / 2);
     scene.add(ceilingMesh);
 
-    // Create secret wall particles (initially invisible)
-    createSecretWallParticles();
+    // No visual hints for secret wall - player discovers by exploring
   }
 
   function buildPigLevel() {
@@ -710,51 +682,6 @@
     scene.add(ceilingMesh);
   }
 
-  // ---- SECRET WALL PARTICLES ----
-
-  function createSecretWallParticles() {
-    var particleCount = 20;
-    var positions = new Float32Array(particleCount * 3);
-
-    for (var i = 0; i < particleCount; i++) {
-      // Scatter around secret wall position
-      positions[i * 3] = SECRET_WALL.x + 0.5 + (Math.random() - 0.5) * 1.2;
-      positions[i * 3 + 1] = Math.random() * 2;
-      positions[i * 3 + 2] = SECRET_WALL.z + 0.5 + (Math.random() - 0.5) * 1.2;
-    }
-
-    var geometry = new THREE.BufferGeometry();
-    geometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
-
-    var material = new THREE.PointsMaterial({
-      color: 0x44ff44,
-      size: 0.06,
-      transparent: true,
-      opacity: 0,
-      blending: THREE.AdditiveBlending,
-      depthWrite: false,
-    });
-
-    secretWallParticles = new THREE.Points(geometry, material);
-    scene.add(secretWallParticles);
-  }
-
-  function updateSecretWallParticles(gameTime) {
-    if (!secretWallParticles || !gameState || !gameState.secretWallOpen) return;
-
-    // Make particles visible and animate
-    secretWallParticles.material.opacity = 0.4 + Math.sin(gameTime * 2) * 0.2;
-
-    // Animate particle positions (gentle floating)
-    var positions = secretWallParticles.geometry.attributes.position.array;
-    for (var i = 0; i < positions.length / 3; i++) {
-      positions[i * 3 + 1] += Math.sin(gameTime * 1.5 + i) * 0.003;
-      // Wrap around vertically
-      if (positions[i * 3 + 1] > 2.2) positions[i * 3 + 1] = -0.2;
-      if (positions[i * 3 + 1] < -0.2) positions[i * 3 + 1] = 2.2;
-    }
-    secretWallParticles.geometry.attributes.position.needsUpdate = true;
-  }
 
   // ---- WEAPON (3D overlay) ----
 
@@ -1107,7 +1034,7 @@
       z-index: 250;\
       white-space: nowrap;\
     ';
-    secretMsg.textContent = 'The walls whisper... one has learned to breathe';
+    secretMsg.textContent = 'Something has changed...';
     hudElement.appendChild(secretMsg);
 
     // Level transition overlay (hidden)
@@ -1584,11 +1511,8 @@
     // Activate secret wall in game state
     activateSecretWall(gameState);
 
-    // Show cryptic message for 4 seconds
-    secretWallMessageTimer = 4.0;
-
-    // Make secret wall visually distinct (handled in render loop via pulse animation)
-    // Particles become visible (handled in updateSecretWallParticles)
+    // Show cryptic message briefly
+    secretWallMessageTimer = 3.0;
   }
 
   // ---- LEVEL TRANSITION ----
@@ -1830,16 +1754,7 @@
       secretWallMessageTimer -= dt;
     }
 
-    // Secret wall visual pulse (doom level only)
-    if (secretWallMesh && gameState.secretWallOpen && gameState.level === 'doom') {
-      var pulseIntensity = Math.sin(gameState.gameTime * 3) * 0.3;
-      secretWallMesh.material.emissive.setHex(0x00ff00);
-      secretWallMesh.material.emissiveIntensity = Math.max(0, 0.1 + pulseIntensity);
-    }
-
-    // Secret wall particles
-    if (gameState.level === 'doom') {
-      updateSecretWallParticles(gameState.gameTime);
+    // Secret wall: no visual hints - player must explore to find it
     }
 
     // Update HUD
@@ -1975,8 +1890,6 @@
     pointerLocked = false;
     gameOverShown = false;
     cheatDetector = null;
-    secretWallMesh = null;
-    secretWallParticles = null;
     secretWallMessageTimer = 0;
     levelTransitionTimer = 0;
     levelTransitionActive = false;
