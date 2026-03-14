@@ -442,6 +442,56 @@ test('cannot shoot creepers behind player', () => {
   assert.strictEqual(result.hit, false);
 });
 
+test('movement direction matches facing direction at all rotations', () => {
+  // This verifies the convention: rotation=0 → +Z, rotation=π/2 → +X
+  // Three.js camera must match this or player walks sideways
+  const state = createGameState();
+
+  // rotation=0 → forward should increase Z
+  state.player.x = 5.5; state.player.z = 5.5; state.player.rotation = 0;
+  const z0 = state.player.z;
+  movePlayer(state, 1, 0, 0.1);
+  assert(state.player.z > z0, 'rotation=0: forward should go +Z');
+
+  // rotation=π/2 → forward should increase X
+  state.player.x = 5.5; state.player.z = 5.5; state.player.rotation = Math.PI / 2;
+  const x0 = state.player.x;
+  movePlayer(state, 1, 0, 0.1);
+  assert(state.player.x > x0, 'rotation=π/2: forward should go +X');
+});
+
+test('can shoot multiple creepers sequentially', () => {
+  const state = createGameState();
+  state.player.x = 5;
+  state.player.z = 5;
+  state.player.rotation = 0; // facing +Z
+
+  // Three creepers ahead at different distances
+  state.creepers.push(
+    { id: 1, x: 5, z: 7, health: 1, alive: true },
+    { id: 2, x: 5, z: 9, health: 1, alive: true },
+    { id: 3, x: 5, z: 11, health: 1, alive: true }
+  );
+
+  // Kill first
+  const r1 = shoot(state);
+  assert.strictEqual(r1.hit, true, 'Should hit first creeper');
+  assert.strictEqual(state.creepers[0].alive, false, 'First creeper should die');
+
+  // Remove dead (simulating updateCreepers)
+  state.creepers = state.creepers.filter(c => c.alive);
+
+  // Kill second
+  const r2 = shoot(state);
+  assert.strictEqual(r2.hit, true, 'Should hit second creeper after first killed');
+
+  state.creepers = state.creepers.filter(c => c.alive);
+
+  // Kill third
+  const r3 = shoot(state);
+  assert.strictEqual(r3.hit, true, 'Should hit third creeper after second killed');
+});
+
 // ============================================
 // GAME UPDATE TESTS
 // ============================================

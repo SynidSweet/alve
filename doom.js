@@ -937,7 +937,10 @@
     // Sync camera to player
     camera.position.set(gameState.player.x, 0.6, gameState.player.z);
     camera.rotation.order = 'YXZ';
-    camera.rotation.y = -gameState.player.rotation;
+    // Game logic: rotation=0 → facing +Z (sin(0)=0, cos(0)=1)
+    // Three.js: rotation.y=0 → facing -Z, forward = (-sin(θ), 0, -cos(θ))
+    // Need -sin(θ) = sin(r) and -cos(θ) = cos(r) → θ = r + π
+    camera.rotation.y = gameState.player.rotation + Math.PI;
 
     // Update player light
     if (scene.userData.playerLight) {
